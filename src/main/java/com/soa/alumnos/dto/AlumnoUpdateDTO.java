@@ -1,0 +1,29 @@
+package com.soa.alumnos.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public record AlumnoUpdateDTO(
+        @NotBlank(message = "El nombre es obligatorio")
+        @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
+        String nombre,
+        
+        @NotBlank(message = "El apellido es obligatorio")
+        @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
+        String apellido,
+        
+        @NotBlank(message = "La dirección es obligatoria")
+        @Size(max = 50, message = "La dirección no puede exceder 50 caracteres")
+        String direccion,
+        
+        @NotBlank(message = "El teléfono es obligatorio")
+        @Pattern(regexp = "^[0-9]{10}$", message = "El teléfono debe tener exactamente 10 dígitos")
+        String telefono,
+        
+        @NotNull(message = "Debe asignar un curso")
+        Integer idCurso
+) {
+
+}

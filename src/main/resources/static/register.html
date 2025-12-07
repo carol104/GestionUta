@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Sistema de Alumnos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background-color: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .footer-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="register-header">
+        <h1>Registrar Usuario</h1>
+        <p>Sistema de Gestión de Alumnos</p>
+    </div>
+
+    <div class="alert alert-danger" id="error-alert" style="display: none;"></div>
+    <div class="alert alert-success" id="success-alert" style="display: none;"></div>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="username">Usuario <span class="required">*</span></label>
+            <input type="text" id="username" name="username" placeholder="Ingrese nombre de usuario" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo Electrónico <span class="required">*</span></label>
+            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nombre">Nombre Completo <span class="required">*</span></label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingrese nombre completo" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña <span class="required">*</span></label>
+            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirmar Contraseña <span class="required">*</span></label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repita la contraseña" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="rol">Rol <span class="required">*</span></label>
+            <select id="rol" name="rol" required>
+                <option value="">-- Seleccione un rol --</option>
+                <option value="ADMIN">Administrador</option>
+                <option value="SECRETARIA">Secretaría</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-register">Registrar Usuario</button>
+    </form>
+
+    <div class="footer-text">
+        ¿Ya tienes cuenta? <a href="/login">Iniciar Sesión</a>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const errorAlert = document.getElementById('error-alert');
+    const successAlert = document.getElementById('success-alert');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Ocultar alertas previas
+        errorAlert.style.display = 'none';
+        successAlert.style.display = 'none';
+
+        // Obtener valores del formulario
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const nombre = document.getElementById('nombre').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const rol = document.getElementById('rol').value;
+
+        // Validaciones
+        if (!username || !email || !nombre || !password || !rol) {
+            showError('Todos los campos son obligatorios');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showError('Las contraseñas no coinciden');
+            return;
+        }
+
+        if (password.length < 6) {
+            showError('La contraseña debe tener al menos 6 caracteres');
+            return;
+        }
+
+        // Enviar datos al backend
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    nombre: nombre,
+                    password: password,
+                    rol: rol
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                showSuccess('✅ Usuario registrado exitosamente. Redirigiendo al login...');
+                form.reset();
+                
+                // Redirigir al login después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                const error = await response.text();
+                showError('❌ ' + error);
+            }
+        } catch (error) {
+            showError('❌ Error al conectar con el servidor: ' + error.message);
+        }
+    });
+
+    function showError(message) {
+        errorAlert.textContent = message;
+        errorAlert.style.display = 'block';
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showSuccess(message) {
+        successAlert.textContent = message;
+        successAlert.style.display = 'block';
+        successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+
+</body>
+</html>
