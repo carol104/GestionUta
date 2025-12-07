@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/alumnos") // Agregué el slash inicial por convención
-@CrossOrigin(origins = {"http://localhost:8080"})
+@RequestMapping("/api/alumnos")
 public class AlumnosController {
 
     private final AlumnosService service;
