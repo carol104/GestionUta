@@ -253,7 +253,6 @@ async function buscarAlumnoPorCedula() {
 // Filtro 2: Ver curso de un alumno
 async function verCursoDeAlumno() {
     const cedula = document.getElementById("filtroCursoCedula").value.trim();
-    const resultadoDiv = document.getElementById("resultadoCurso");
     
     if (!cedula) {
         alert("Por favor ingrese una cédula");
@@ -264,11 +263,12 @@ async function verCursoDeAlumno() {
         const response = await fetch(`${API_ALUMNOS}/${cedula}/curso`);
         if (response.ok) {
             const curso = await response.json();
-            resultadoDiv.innerHTML = `<strong>Curso:</strong> ${curso.nombreCurso} - <strong>Paralelo:</strong> ${curso.paralelo}`;
-            resultadoDiv.classList.add("show");
+            // Filtrar la tabla para mostrar solo este curso
+            renderizarTablaCursos([curso]);
         } else {
-            resultadoDiv.innerHTML = `<strong>No se encontró el curso del alumno</strong>`;
-            resultadoDiv.classList.add("show");
+            alert("No se encontró el curso del alumno");
+            // Mostrar tabla vacía
+            document.getElementById("tblCursos").innerHTML = "";
         }
     } catch (error) {
         console.error("Error:", error);
@@ -302,8 +302,9 @@ function limpiarFiltros() {
     document.getElementById("filtroCedula").value = "";
     document.getElementById("filtroCursoCedula").value = "";
     document.getElementById("filtroCursoId").value = "";
-    const resultadoDiv = document.getElementById("resultadoCurso");
-    resultadoDiv.classList.remove("show");
-    resultadoDiv.innerHTML = "";
+    // Recargar todas las tablas
     mostrarAlumnos();
+    if (typeof mostrarCursos === 'function') {
+        mostrarCursos();
+    }
 }

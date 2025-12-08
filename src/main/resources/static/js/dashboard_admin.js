@@ -53,25 +53,29 @@ function cerrarModalCurso() {
 // ==========================================
 // LÓGICA DE CURSOS
 // ==========================================
+function renderizarTablaCursos(listaCursos) {
+    const tabla = document.getElementById("tblCursos");
+    tabla.innerHTML = "";
+
+    listaCursos.forEach(c => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${c.idCurso}</td>
+                <td>${c.nombreCurso}</td>
+                <td>${c.paralelo || '-'}</td>
+                <td>
+                    <button class="btn-warning" onclick="abrirModalCurso(${c.idCurso}, '${c.nombreCurso}', '${c.paralelo}')">✏️ Editar</button>
+                    <button class="btn-danger" onclick="eliminarCurso(${c.idCurso})">🗑️ Eliminar</button>
+                </td>
+            </tr>`;
+    });
+}
+
 async function mostrarCursos() {
     try {
         const response = await fetch(API_CURSOS);
         const cursos = await response.json();
-        const tabla = document.getElementById("tblCursos");
-        tabla.innerHTML = "";
-
-        cursos.forEach(c => {
-            tabla.innerHTML += `
-                <tr>
-                    <td>${c.idCurso}</td>
-                    <td>${c.nombreCurso}</td>
-                    <td>${c.paralelo || '-'}</td>
-                    <td>
-                        <button class="btn-warning" onclick="abrirModalCurso(${c.idCurso}, '${c.nombreCurso}', '${c.paralelo}')">✏️ Editar</button>
-                        <button class="btn-danger" onclick="eliminarCurso(${c.idCurso})">🗑️ Eliminar</button>
-                    </td>
-                </tr>`;
-        });
+        renderizarTablaCursos(cursos);
     } catch (error) {
         console.error("Error al cargar cursos:", error);
         alert("Error al cargar cursos");
