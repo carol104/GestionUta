@@ -78,7 +78,7 @@ async function mostrarCursos() {
         renderizarTablaCursos(cursos);
     } catch (error) {
         console.error("Error al cargar cursos:", error);
-        alert("Error al cargar cursos");
+        mostrarNotificacion("No se pudieron cargar los cursos. Por favor, intente nuevamente.", "error");
     }
 }
 
@@ -101,14 +101,17 @@ async function guardarCurso() {
             cerrarModalCurso();
             await mostrarCursos();
             await cargarCursosEnSelects();
-            alert(id ? "Curso actualizado correctamente" : "Curso creado correctamente");
+            mostrarNotificacion(
+                id ? "El curso se actualizó correctamente." : "El curso se creó exitosamente.",
+                "success"
+            );
         } else {
             const error = await response.json();
-            alert(`Error: ${error.message || 'No se pudo guardar el curso'}`);
+            mostrarNotificacion(error.message || 'No se pudo guardar el curso. Verifique los datos e intente nuevamente.', "error");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al conectar con el servidor");
+        mostrarNotificacion("No se pudo conectar con el servidor. Verifique su conexión.", "error");
     }
 }
 
@@ -120,14 +123,14 @@ async function eliminarCurso(id) {
         if (response.ok) {
             await mostrarCursos();
             await cargarCursosEnSelects();
-            alert("Curso eliminado correctamente");
+            mostrarNotificacion("El curso se eliminó correctamente.", "success");
         } else {
             const error = await response.json();
-            alert(`Error: ${error.message || 'No se pudo eliminar el curso'}`);
+            mostrarNotificacion(error.message || 'No se pudo eliminar el curso. Intente nuevamente.', "error");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al conectar con el servidor");
+        mostrarNotificacion("No se pudo conectar con el servidor.", "error");
     }
 }
 

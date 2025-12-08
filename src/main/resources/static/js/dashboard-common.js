@@ -10,6 +10,54 @@ let modoEdicion = false;
 let cedulaEdicion = null;
 
 // ==========================================
+// SISTEMA DE NOTIFICACIONES MODALES
+// ==========================================
+function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
+    const modal = document.getElementById('notificationModal');
+    const icon = document.getElementById('modalIcon');
+    const titleElement = document.getElementById('modalTitle');
+    const messageElement = document.getElementById('modalMessage');
+    
+    // Configurar icono y título según el tipo
+    const configuraciones = {
+        success: { icono: '✓', titulo: titulo || 'Éxito' },
+        error: { icono: '✕', titulo: titulo || 'Error' },
+        warning: { icono: '⚠', titulo: titulo || 'Advertencia' },
+        info: { icono: 'ℹ', titulo: titulo || 'Información' }
+    };
+    
+    const config = configuraciones[tipo] || configuraciones.info;
+    
+    // Limpiar clases previas
+    icon.className = 'modal-icon';
+    icon.classList.add(tipo);
+    icon.textContent = config.icono;
+    
+    titleElement.textContent = config.titulo;
+    messageElement.textContent = mensaje;
+    
+    // Mostrar modal
+    modal.classList.add('show');
+}
+
+function cerrarModalNotificacion() {
+    const modal = document.getElementById('notificationModal');
+    modal.classList.remove('show');
+}
+
+// Cerrar modal al hacer clic fuera de él
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('notificationModal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                cerrarModalNotificacion();
+            }
+        });
+    }
+});
+
+// ==========================================
 // VALIDACIONES EN TIEMPO REAL
 // ==========================================
 function configurarValidacionesAlumno() {
@@ -118,7 +166,7 @@ async function mostrarAlumnos() {
         renderizarTablaAlumnos(alumnos);
     } catch (error) {
         console.error("Error al cargar alumnos:", error);
-        alert("Error al cargar alumnos");
+        mostrarNotificacion("No se pudieron cargar los alumnos. Por favor, intente nuevamente.", "error");
     }
 }
 
@@ -158,7 +206,7 @@ async function cargarDatosAlumno(cedula) {
         document.getElementById("selectCursoAlumno").value = al.curso ? al.curso.idCurso : "";
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al cargar datos del alumno");
+        mostrarNotificacion("No se pudieron cargar los datos del alumno.", "error");
     }
 }
 
@@ -173,7 +221,7 @@ async function guardarAlumno() {
     };
 
     if (!data.idCurso) {
-        alert("Por favor seleccione un curso");
+        mostrarNotificacion("Por favor seleccione un curso antes de guardar.", "warning");
         return;
     }
 
@@ -196,14 +244,17 @@ async function guardarAlumno() {
         if (response.ok) {
             cerrarModalAlumno();
             await mostrarAlumnos();
-            alert(modoEdicion ? "Alumno actualizado correctamente" : "Alumno creado correctamente");
+            mostrarNotificacion(
+                modoEdicion ? "Los datos del alumno se actualizaron correctamente." : "El alumno se registró exitosamente.",
+                "success"
+            );
         } else {
             const error = await response.json();
-            alert(`Error: ${error.message || 'No se pudo guardar el alumno'}`);
+            mostrarNotificacion(error.message || 'No se pudo guardar el alumno. Verifique los datos e intente nuevamente.', "error");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al conectar con el servidor");
+        mostrarNotificacion("No se pudo conectar con el servidor. Verifique su conexión.", "error");
     }
 }
 
@@ -214,13 +265,13 @@ async function eliminarAlumno(cedula) {
         const response = await fetch(`${API_ALUMNOS}/${cedula}`, { method: "DELETE" });
         if (response.ok) {
             await mostrarAlumnos();
-            alert("Alumno eliminado correctamente");
+            mostrarNotificacion("El alumno se eliminó correctamente.", "success");
         } else {
-            alert("Error al eliminar el alumno");
+            mostrarNotificacion("No se pudo eliminar el alumno. Intente nuevamente.", "error");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al conectar con el servidor");
+        mostrarNotificacion("No se pudo conectar con el servidor.", "error");
     }
 }
 
@@ -232,7 +283,7 @@ async function eliminarAlumno(cedula) {
 async function buscarAlumnoPorCedula() {
     const cedula = document.getElementById("filtroCedula").value.trim();
     if (!cedula) {
-        alert("Por favor ingrese una cédula");
+        mostrarNotificacion("Por favor ingrese una cédula para buscar.", "warning");
         return;
     }
 
@@ -242,11 +293,11 @@ async function buscarAlumnoPorCedula() {
             const alumno = await response.json();
             renderizarTablaAlumnos([alumno]);
         } else {
-            alert("Alumno no encontrado");
+            mostrarNotificacion("No se encontró ningún alumno con esa cédula.", "info");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al buscar el alumno");
+        mostrarNotificacion("Error al buscar el alumno.", "error");
     }
 }
 
@@ -255,7 +306,7 @@ async function verCursoDeAlumno() {
     const cedula = document.getElementById("filtroCursoCedula").value.trim();
     
     if (!cedula) {
-        alert("Por favor ingrese una cédula");
+        mostrarNotificacion("Por favor ingrese una cédula para buscar el curso.", "warning");
         return;
     }
 
@@ -266,13 +317,13 @@ async function verCursoDeAlumno() {
             // Filtrar la tabla para mostrar solo este curso
             renderizarTablaCursos([curso]);
         } else {
-            alert("No se encontró el curso del alumno");
+            mostrarNotificacion("No se encontró el curso del alumno con esa cédula.", "info");
             // Mostrar tabla vacía
             document.getElementById("tblCursos").innerHTML = "";
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al obtener el curso del alumno");
+        mostrarNotificacion("Error al obtener el curso del alumno.", "error");
     }
 }
 
@@ -280,7 +331,7 @@ async function verCursoDeAlumno() {
 async function listarAlumnosPorCurso() {
     const idCurso = document.getElementById("filtroCursoId").value;
     if (!idCurso) {
-        alert("Por favor seleccione un curso");
+        mostrarNotificacion("Por favor seleccione un curso para ver sus alumnos.", "warning");
         return;
     }
 
@@ -290,11 +341,11 @@ async function listarAlumnosPorCurso() {
             const alumnos = await response.json();
             renderizarTablaAlumnos(alumnos);
         } else {
-            alert("Error al obtener alumnos del curso");
+            mostrarNotificacion("Error al obtener los alumnos del curso.", "error");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Error al aplicar filtro");
+        mostrarNotificacion("Error al aplicar filtro.", "error");
     }
 }
 
