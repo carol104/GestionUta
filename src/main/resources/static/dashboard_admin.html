@@ -9,21 +9,20 @@
 <body>
 
 <div class="header">
-    <h1>🎓 Panel de Administrador - Sistema de Gestión Escolar</h1>
+    <h1>Panel de Administrador - Sistema de Gestión Escolar</h1>
     <form action="/logout" method="post" style="margin: 0;">
-        <button type="submit" class="btn-logout">🚪 Cerrar Sesión</button>
+        <button type="submit" class="btn-logout">Cerrar Sesión</button>
     </form>
 </div>
 
 <div class="container">
     <!-- Filtros -->
     <div class="filters">
-        <h3>🔍 Filtros de Búsqueda</h3>
+        <h3> Filtros de Búsqueda</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
             
-            <!-- Filtro 1: Buscar alumno por cédula -->
             <div class="filter-item">
-                <h4>🔎 Buscar Alumno</h4>
+                <h4> Buscar Alumno</h4>
                 <div class="filter-controls">
                     <div>
                         <input type="text" id="filtroCedula" placeholder="Ingrese cédula del alumno">
@@ -32,9 +31,8 @@
                 </div>
             </div>
 
-            <!-- Filtro 2: Ver curso de alumno -->
             <div class="filter-item">
-                <h4>📖 Curso del Alumno</h4>
+                <h4> Curso del Alumno</h4>
                 <div class="filter-controls">
                     <div>
                         <input type="text" id="filtroCursoCedula" placeholder="Ingrese cédula del alumno">
@@ -46,7 +44,7 @@
 
             <!-- Filtro 3: Alumnos por curso -->
             <div class="filter-item">
-                <h4>👥 Alumnos por Curso</h4>
+                <h4>Alumnos por Curso</h4>
                 <div class="filter-controls">
                     <div>
                         <select id="filtroCursoId">
@@ -58,15 +56,15 @@
             </div>
 
         </div>
-        <button class="btn-secondary" onclick="limpiarFiltros()" style="margin-top: 15px;">🔄 Limpiar Todos los Filtros</button>
+        <button class="btn-secondary" onclick="limpiarFiltros()" style="margin-top: 15px;">Limpiar Todos los Filtros</button>
     </div>
 
     <div class="sections-container">
 
         <!-- Sección de Cursos - Más angosta -->
         <div class="section section-cursos">
-            <h2>📚 Gestión de Cursos</h2>
-            <button class="btn-primary" onclick="abrirModalCurso()">➕ Nuevo Curso</button>
+            <h2> Gestión de Cursos</h2>
+            <button class="btn-primary" onclick="abrirModalCurso()">Nuevo Curso</button>
             <table>
                 <thead>
                     <tr>
@@ -82,8 +80,8 @@
 
         <!-- Sección de Alumnos - Más ancha -->
         <div class="section section-alumnos">
-            <h2>👨‍🎓 Gestión de Alumnos</h2>
-            <button class="btn-primary" onclick="abrirModalAlumno()">➕ Nuevo Alumno</button>
+            <h2> Gestión de Alumnos</h2>
+            <button class="btn-primary" onclick="abrirModalAlumno()">Nuevo Alumno</button>
             <table>
                 <thead>
                     <tr>
@@ -120,7 +118,7 @@
                 <input type="text" id="paraleloCurso" placeholder="Ej: A" maxlength="1" 
                        pattern="[A-Za-z]" title="Solo se permite una letra (A-Z)" required>
             </div>
-            <button type="submit" class="btn-success">💾 Guardar</button>
+            <button type="submit" class="btn-success">Guardar</button>
             <button type="button" class="btn-secondary" onclick="cerrarModalCurso()">✖ Cancelar</button>
         </form>
     </div>
@@ -164,7 +162,7 @@
                     <option value="">-- Seleccione un Curso --</option>
                 </select>
             </div>
-            <button type="submit" class="btn-success">💾 Guardar</button>
+            <button type="submit" class="btn-success">Guardar</button>
             <button type="button" class="btn-secondary" onclick="cerrarModalAlumno()">✖ Cancelar</button>
         </form>
     </div>
