@@ -7,11 +7,13 @@ import jakarta.validation.constraints.Size;
 
 public record AlumnoUpdateDTO(
         @NotBlank(message = "El nombre es obligatorio")
-        @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
+        @Size(min = 3, max = 20, message = "El nombre debe tener entre 3 y 20 caracteres")
+        @Pattern(regexp = "^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$", message = "El nombre solo puede contener letras y espacios")
         String nombre,
         
         @NotBlank(message = "El apellido es obligatorio")
-        @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
+        @Size(min = 3, max = 20, message = "El apellido debe tener entre 3 y 20 caracteres")
+        @Pattern(regexp = "^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$", message = "El apellido solo puede contener letras y espacios")
         String apellido,
         
         @NotBlank(message = "La dirección es obligatoria")

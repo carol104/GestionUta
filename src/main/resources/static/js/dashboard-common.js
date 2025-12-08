@@ -10,6 +10,67 @@ let modoEdicion = false;
 let cedulaEdicion = null;
 
 // ==========================================
+// VALIDACIONES EN TIEMPO REAL
+// ==========================================
+function configurarValidacionesAlumno() {
+    // Validación de Cédula: solo números, exactamente 10
+    const inputCedula = document.getElementById('cedula');
+    if (inputCedula) {
+        inputCedula.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 10);
+        });
+        inputCedula.addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(String.fromCharCode(e.which))) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Validación de Teléfono: solo números, exactamente 10
+    const inputTelefono = document.getElementById('telefono');
+    if (inputTelefono) {
+        inputTelefono.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 10);
+        });
+        inputTelefono.addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(String.fromCharCode(e.which))) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Validación de Nombre: solo letras y espacios, mínimo 3
+    const inputNombre = document.getElementById('nombre');
+    if (inputNombre) {
+        inputNombre.addEventListener('input', function(e) {
+            // Permitir letras (incluye acentos), espacios y ñ
+            e.target.value = e.target.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, '');
+        });
+        inputNombre.addEventListener('keypress', function(e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[A-Za-záéíóúÁÉÍÓÚñÑ ]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Validación de Apellido: solo letras y espacios, mínimo 3
+    const inputApellido = document.getElementById('apellido');
+    if (inputApellido) {
+        inputApellido.addEventListener('input', function(e) {
+            // Permitir letras (incluye acentos), espacios y ñ
+            e.target.value = e.target.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, '');
+        });
+        inputApellido.addEventListener('keypress', function(e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[A-Za-záéíóúÁÉÍÓÚñÑ ]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+    }
+}
+
+// ==========================================
 // MODALES - ALUMNO
 // ==========================================
 function abrirModalAlumno(cedula = null) {
@@ -27,6 +88,9 @@ function abrirModalAlumno(cedula = null) {
         document.getElementById('cedula').disabled = false;
         document.getElementById('formAlumno').reset();
     }
+    
+    // Configurar validaciones cada vez que se abre el modal
+    configurarValidacionesAlumno();
 }
 
 function cerrarModalAlumno() {
