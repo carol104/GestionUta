@@ -417,8 +417,9 @@ table .btn-danger:active {
 .modal-message {
     color: #666;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
     margin-bottom: 20px;
+    white-space: pre-line;
 }
 
 .modal-footer {

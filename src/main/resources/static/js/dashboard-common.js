@@ -12,11 +12,15 @@ let cedulaEdicion = null;
 // ==========================================
 // SISTEMA DE NOTIFICACIONES MODALES
 // ==========================================
+let modalCallback = null;
+
 function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
     const modal = document.getElementById('notificationModal');
     const icon = document.getElementById('modalIcon');
     const titleElement = document.getElementById('modalTitle');
     const messageElement = document.getElementById('modalMessage');
+    const btnCancel = document.getElementById('modalBtnCancel');
+    const btnAccept = document.getElementById('modalBtnAccept');
     
     // Configurar icono y título según el tipo
     const configuraciones = {
@@ -36,21 +40,62 @@ function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
     titleElement.textContent = config.titulo;
     messageElement.textContent = mensaje;
     
+    // Ocultar botón cancelar (solo notificaciones)
+    btnCancel.style.display = 'none';
+    btnAccept.textContent = 'Aceptar';
+    
     // Mostrar modal
     modal.classList.add('show');
+    
+    // Resetear callback
+    modalCallback = null;
 }
 
-function cerrarModalNotificacion() {
+function mostrarConfirmacion(mensaje, titulo = 'Confirmar acción') {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('notificationModal');
+        const icon = document.getElementById('modalIcon');
+        const titleElement = document.getElementById('modalTitle');
+        const messageElement = document.getElementById('modalMessage');
+        const btnCancel = document.getElementById('modalBtnCancel');
+        const btnAccept = document.getElementById('modalBtnAccept');
+        
+        // Configurar icono de confirmación
+        icon.className = 'modal-icon warning';
+        icon.textContent = '?';
+        
+        titleElement.textContent = titulo;
+        messageElement.textContent = mensaje;
+        
+        // Mostrar ambos botones
+        btnCancel.style.display = 'inline-block';
+        btnAccept.textContent = 'Confirmar';
+        
+        // Guardar callback
+        modalCallback = resolve;
+        
+        // Mostrar modal
+        modal.classList.add('show');
+    });
+}
+
+function cerrarModalNotificacion(resultado = true) {
     const modal = document.getElementById('notificationModal');
     modal.classList.remove('show');
+    
+    // Si hay un callback (confirmación), ejecutarlo
+    if (modalCallback) {
+        modalCallback(resultado);
+        modalCallback = null;
+    }
 }
 
-// Cerrar modal al hacer clic fuera de él
+// Cerrar modal al hacer clic fuera de él (solo para notificaciones, no confirmaciones)
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('notificationModal');
     if (modal) {
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
+            if (e.target === modal && !modalCallback) {
                 cerrarModalNotificacion();
             }
         });
@@ -259,7 +304,12 @@ async function guardarAlumno() {
 }
 
 async function eliminarAlumno(cedula) {
-    if (!confirm(`¿Está seguro de eliminar al alumno con cédula ${cedula}?`)) return;
+    const confirmar = await mostrarConfirmacion(
+        `¿Está seguro de eliminar al alumno con cédula ${cedula}?\n\nEsta acción no se puede deshacer.`,
+        'Confirmar eliminación'
+    );
+    
+    if (!confirmar) return;
 
     try {
         const response = await fetch(`${API_ALUMNOS}/${cedula}`, { method: "DELETE" });

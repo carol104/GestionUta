@@ -116,7 +116,12 @@ async function guardarCurso() {
 }
 
 async function eliminarCurso(id) {
-    if (!confirm("¿Está seguro de eliminar este curso?")) return;
+    const confirmar = await mostrarConfirmacion(
+        '¿Está seguro de eliminar este curso?\n\nTodos los alumnos asociados quedarán sin curso.\nEsta acción no se puede deshacer.',
+        'Confirmar eliminación'
+    );
+    
+    if (!confirmar) return;
     
     try {
         const response = await fetch(`${API_CURSOS}/${id}`, { method: "DELETE" });
