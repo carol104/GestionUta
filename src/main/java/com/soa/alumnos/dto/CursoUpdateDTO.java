@@ -1,6 +1,7 @@
 package com.soa.alumnos.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record CursoUpdateDTO(
@@ -9,7 +10,8 @@ public record CursoUpdateDTO(
         String nombreCurso,
         
         @NotBlank(message = "El paralelo es obligatorio")
-        @Size(min = 1, max = 10, message = "El paralelo no puede exceder 10 caracteres")
+        @Size(min = 1, max = 1, message = "El paralelo debe ser exactamente un carácter")
+        @Pattern(regexp = "^[A-Za-z]$", message = "El paralelo debe ser una sola letra (A-Z)")
         String paralelo
 ) {
 }

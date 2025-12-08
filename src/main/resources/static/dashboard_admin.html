@@ -117,7 +117,8 @@
             </div>
             <div class="form-group">
                 <label>Paralelo:</label>
-                <input type="text" id="paraleloCurso" placeholder="Ej: A" minlength="1" maxlength="10" required>
+                <input type="text" id="paraleloCurso" placeholder="Ej: A" maxlength="1" 
+                       pattern="[A-Za-z]" title="Solo se permite una letra (A-Z)" required>
             </div>
             <button type="submit" class="btn-success">💾 Guardar</button>
             <button type="button" class="btn-secondary" onclick="cerrarModalCurso()">✖ Cancelar</button>
