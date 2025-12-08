@@ -138,8 +138,8 @@ function renderizarTablaAlumnos(lista) {
                 <td>${al.telefono}</td>
                 <td>${nombreCurso}</td>
                 <td>
-                    <button class="btn-warning" onclick="abrirModalAlumno('${al.cedula}')">✏️</button>
-                    <button class="btn-danger" onclick="eliminarAlumno('${al.cedula}')">🗑️</button>
+                    <button class="btn-warning" onclick="abrirModalAlumno('${al.cedula}')">✏️ Editar</button>
+                    <button class="btn-danger" onclick="eliminarAlumno('${al.cedula}')">🗑️ Eliminar</button>
                 </td>
             </tr>`;
     });

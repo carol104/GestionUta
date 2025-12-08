@@ -67,8 +67,8 @@ async function mostrarCursos() {
                     <td>${c.nombreCurso}</td>
                     <td>${c.paralelo || '-'}</td>
                     <td>
-                        <button class="btn-warning" onclick="abrirModalCurso(${c.idCurso}, '${c.nombreCurso}', '${c.paralelo}')">✏️</button>
-                        <button class="btn-danger" onclick="eliminarCurso(${c.idCurso})">🗑️</button>
+                        <button class="btn-warning" onclick="abrirModalCurso(${c.idCurso}, '${c.nombreCurso}', '${c.paralelo}')">✏️ Editar</button>
+                        <button class="btn-danger" onclick="eliminarCurso(${c.idCurso})">🗑️ Eliminar</button>
                     </td>
                 </tr>`;
         });

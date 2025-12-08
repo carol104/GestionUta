@@ -142,6 +142,12 @@ tr:hover {
     background-color: #f5f5f5; 
 }
 
+/* Columna de acciones centrada */
+td:last-child {
+    text-align: center;
+    vertical-align: middle;
+}
+
 /* Formularios */
 label { 
     display: block; 
@@ -188,13 +194,25 @@ button {
 }
 
 .btn-warning { 
-    background-color: #ffd43b; 
-    color: #333; 
+    background: linear-gradient(135deg, #ffa94d 0%, #ff8c00 100%);
+    color: white; 
+    box-shadow: 0 2px 8px rgba(255, 169, 77, 0.3);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff7700 100%);
+    box-shadow: 0 4px 12px rgba(255, 169, 77, 0.5);
 }
 
 .btn-danger { 
-    background-color: #ff6b6b; 
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
     color: white; 
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ee5a52 0%, #e03131 100%);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.5);
 }
 
 .btn-secondary { 
@@ -204,7 +222,31 @@ button {
 
 button:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+}
+
+/* Botones de acción en tablas */
+table .btn-warning,
+table .btn-danger {
+    padding: 8px 16px;
+    margin: 2px;
+    font-size: 13px;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    transition: all 0.3s ease;
+}
+
+table .btn-warning:hover,
+table .btn-danger:hover {
+    transform: translateY(-3px);
+}
+
+table .btn-warning:active,
+table .btn-danger:active {
+    transform: translateY(0);
 }
 
 /* Modales */
