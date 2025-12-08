@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Modales</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <style>
+        body {
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .btn-test {
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-test.success {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+        .btn-test.error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+        .btn-test.warning {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            color: #333;
+        }
+        .btn-test.info {
+            background: linear-gradient(135deg, #4dabf7 0%, #228be6 100%);
+            color: white;
+        }
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+<div class="test-container">
+    <h1>🧪 Prueba del Sistema de Modales</h1>
+
+    <div class="test-section">
+        <h2>📢 Notificaciones Simples</h2>
+        <p style="color: #666; margin-bottom: 10px;">Modales con un solo botón "Aceptar"</p>
+        <button class="btn-test success" onclick="testSuccess()">✓ Éxito</button>
+        <button class="btn-test error" onclick="testError()">✕ Error</button>
+        <button class="btn-test warning" onclick="testWarning()">⚠ Advertencia</button>
+        <button class="btn-test info" onclick="testInfo()">ℹ Información</button>
+    </div>
+
+    <div class="test-section">
+        <h2>❓ Confirmaciones</h2>
+        <p style="color: #666; margin-bottom: 10px;">Modales con dos botones "Confirmar" y "Cancelar"</p>
+        <button class="btn-test warning" onclick="testConfirm()">Eliminar Alumno</button>
+        <button class="btn-test warning" onclick="testConfirmCurso()">Eliminar Curso</button>
+        <div id="confirmResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 Simulación de Operaciones</h2>
+        <p style="color: #666; margin-bottom: 10px;">Prueba de flujo completo con confirmación + resultado</p>
+        <button class="btn-test info" onclick="testOperacionCompleta()">Guardar Datos</button>
+        <button class="btn-test error" onclick="testOperacionError()">Operación con Error</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Estado Actual</h2>
+        <ul style="color: #666; line-height: 2;">
+            <li>✅ Todos los <code>alert()</code> reemplazados: <strong>25 modales</strong></li>
+            <li>✅ Todos los <code>confirm()</code> reemplazados: <strong>2 confirmaciones</strong></li>
+            <li>✅ Sistema modal personalizado con 4 tipos</li>
+            <li>✅ Animaciones suaves y diseño moderno</li>
+            <li>✅ Soporte para confirmaciones con callback async</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal de notificaciones -->
+<div id="notificationModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div id="modalIcon" class="modal-icon"></div>
+            <h3 id="modalTitle" class="modal-title"></h3>
+        </div>
+        <p id="modalMessage" class="modal-message"></p>
+        <div id="modalFooter" class="modal-footer">
+            <button id="modalBtnCancel" class="modal-btn modal-btn-secondary" onclick="cerrarModalNotificacion(false)" style="display: none;">Cancelar</button>
+            <button id="modalBtnAccept" class="modal-btn modal-btn-primary" onclick="cerrarModalNotificacion(true)">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Copiar el sistema de modales de dashboard-common.js
+let modalCallback = null;
+
+function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
+    const modal = document.getElementById('notificationModal');
+    const icon = document.getElementById('modalIcon');
+    const titleElement = document.getElementById('modalTitle');
+    const messageElement = document.getElementById('modalMessage');
+    const btnCancel = document.getElementById('modalBtnCancel');
+    const btnAccept = document.getElementById('modalBtnAccept');
+    
+    const configuraciones = {
+        success: { icono: '✓', titulo: titulo || 'Éxito' },
+        error: { icono: '✕', titulo: titulo || 'Error' },
+        warning: { icono: '⚠', titulo: titulo || 'Advertencia' },
+        info: { icono: 'ℹ', titulo: titulo || 'Información' }
+    };
+    
+    const config = configuraciones[tipo] || configuraciones.info;
+    
+    icon.className = 'modal-icon';
+    icon.classList.add(tipo);
+    icon.textContent = config.icono;
+    
+    titleElement.textContent = config.titulo;
+    messageElement.textContent = mensaje;
+    
+    btnCancel.style.display = 'none';
+    btnAccept.textContent = 'Aceptar';
+    
+    modal.classList.add('show');
+    modalCallback = null;
+}
+
+function mostrarConfirmacion(mensaje, titulo = 'Confirmar acción') {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('notificationModal');
+        const icon = document.getElementById('modalIcon');
+        const titleElement = document.getElementById('modalTitle');
+        const messageElement = document.getElementById('modalMessage');
+        const btnCancel = document.getElementById('modalBtnCancel');
+        const btnAccept = document.getElementById('modalBtnAccept');
+        
+        icon.className = 'modal-icon warning';
+        icon.textContent = '?';
+        
+        titleElement.textContent = titulo;
+        messageElement.textContent = mensaje;
+        
+        btnCancel.style.display = 'inline-block';
+        btnAccept.textContent = 'Confirmar';
+        
+        modalCallback = resolve;
+        modal.classList.add('show');
+    });
+}
+
+function cerrarModalNotificacion(resultado = true) {
+    const modal = document.getElementById('notificationModal');
+    modal.classList.remove('show');
+    
+    if (modalCallback) {
+        modalCallback(resultado);
+        modalCallback = null;
+    }
+}
+
+// Cerrar modal al hacer clic fuera
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('notificationModal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal && !modalCallback) {
+                cerrarModalNotificacion();
+            }
+        });
+    }
+});
+
+// Funciones de prueba
+function testSuccess() {
+    mostrarNotificacion('El alumno se registró exitosamente en el sistema.', 'success');
+}
+
+function testError() {
+    mostrarNotificacion('No se pudo conectar con el servidor. Verifique su conexión.', 'error');
+}
+
+function testWarning() {
+    mostrarNotificacion('Por favor complete todos los campos antes de continuar.', 'warning');
+}
+
+function testInfo() {
+    mostrarNotificacion('Los datos se están procesando. Por favor espere un momento.', 'info');
+}
+
+async function testConfirm() {
+    const confirmar = await mostrarConfirmacion(
+        '¿Está seguro de eliminar al alumno con cédula 1234567890?\n\nEsta acción no se puede deshacer.',
+        'Confirmar eliminación'
+    );
+    
+    const resultDiv = document.getElementById('confirmResult');
+    resultDiv.style.display = 'block';
+    resultDiv.textContent = confirmar ? '✅ Usuario confirmó la eliminación' : '❌ Usuario canceló la operación';
+    
+    if (confirmar) {
+        setTimeout(() => {
+            mostrarNotificacion('El alumno se eliminó correctamente.', 'success');
+        }, 500);
+    }
+}
+
+async function testConfirmCurso() {
+    const confirmar = await mostrarConfirmacion(
+        '¿Está seguro de eliminar este curso?\n\nTodos los alumnos asociados quedarán sin curso.\nEsta acción no se puede deshacer.',
+        'Confirmar eliminación'
+    );
+    
+    const resultDiv = document.getElementById('confirmResult');
+    resultDiv.style.display = 'block';
+    resultDiv.textContent = confirmar ? '✅ Curso eliminado' : '❌ Operación cancelada';
+    
+    if (confirmar) {
+        setTimeout(() => {
+            mostrarNotificacion('El curso se eliminó correctamente.', 'success');
+        }, 500);
+    }
+}
+
+async function testOperacionCompleta() {
+    mostrarNotificacion('Guardando los datos...', 'info');
+    
+    setTimeout(() => {
+        mostrarNotificacion('Los datos del alumno se actualizaron correctamente.', 'success');
+    }, 1500);
+}
+
+async function testOperacionError() {
+    const confirmar = await mostrarConfirmacion(
+        '¿Desea continuar con esta operación?\n\nEsta prueba mostrará un error simulado.',
+        'Confirmar operación'
+    );
+    
+    if (confirmar) {
+        setTimeout(() => {
+            mostrarNotificacion('No se pudo guardar el alumno. Verifique los datos e intente nuevamente.', 'error');
+        }, 800);
+    }
+}
+</script>
+
+</body>
+</html>
