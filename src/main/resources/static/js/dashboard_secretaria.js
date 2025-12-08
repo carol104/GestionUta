@@ -1,0 +1,34 @@
+// ==========================================
+// DASHBOARD SECRETARÍA - FUNCIONES ESPECÍFICAS
+// ==========================================
+
+// AL CARGAR LA PAGINA
+document.addEventListener("DOMContentLoaded", init);
+
+async function init() {
+    await cargarCursosEnSelect();
+    await mostrarAlumnos();
+}
+
+// ==========================================
+// LÓGICA DE CURSOS (Solo lectura para Secretaría)
+// ==========================================
+async function cargarCursosEnSelect() {
+    try {
+        const response = await fetch(API_CURSOS);
+        const cursos = await response.json();
+
+        const select1 = document.getElementById("selectCursoAlumno");
+        const select2 = document.getElementById("filtroCursoId");
+        
+        select1.innerHTML = '<option value="">-- Seleccione un Curso --</option>';
+        select2.innerHTML = '<option value="">Todos los cursos</option>';
+
+        cursos.forEach(c => {
+            select1.innerHTML += `<option value="${c.idCurso}">${c.nombreCurso} (${c.paralelo})</option>`;
+            select2.innerHTML += `<option value="${c.idCurso}">${c.nombreCurso} (${c.paralelo})</option>`;
+        });
+    } catch (error) {
+        console.error("Error al cargar cursos:", error);
+    }
+}
