@@ -1,8 +1,3 @@
-// ==========================================
-// DASHBOARD SECRETARÍA - FUNCIONES ESPECÍFICAS
-// ==========================================
-
-// AL CARGAR LA PAGINA
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -10,9 +5,6 @@ async function init() {
     await mostrarAlumnos();
 }
 
-// ==========================================
-// LÓGICA DE CURSOS (Solo lectura para Secretaría)
-// ==========================================
 async function cargarCursosEnSelect() {
     try {
         const response = await fetch(API_CURSOS);

@@ -1,17 +1,9 @@
-// ==========================================
-// FUNCIONES COMUNES PARA AMBOS DASHBOARDS
-// ==========================================
 
-// URLS API
 const API_ALUMNOS = "/api/alumnos";
 const API_CURSOS = "/api/cursos";
 
 let modoEdicion = false;
 let cedulaEdicion = null;
-
-// ==========================================
-// SISTEMA DE NOTIFICACIONES MODALES
-// ==========================================
 let modalCallback = null;
 
 function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
@@ -22,7 +14,6 @@ function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
     const btnCancel = document.getElementById('modalBtnCancel');
     const btnAccept = document.getElementById('modalBtnAccept');
     
-    // Configurar icono y título según el tipo
     const configuraciones = {
         success: { icono: '✓', titulo: titulo || 'Éxito' },
         error: { icono: '✕', titulo: titulo || 'Error' },
@@ -32,7 +23,6 @@ function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
     
     const config = configuraciones[tipo] || configuraciones.info;
     
-    // Limpiar clases previas
     icon.className = 'modal-icon';
     icon.classList.add(tipo);
     icon.textContent = config.icono;
@@ -40,14 +30,11 @@ function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
     titleElement.textContent = config.titulo;
     messageElement.textContent = mensaje;
     
-    // Ocultar botón cancelar (solo notificaciones)
     btnCancel.style.display = 'none';
     btnAccept.textContent = 'Aceptar';
     
-    // Mostrar modal
     modal.classList.add('show');
     
-    // Resetear callback
     modalCallback = null;
 }
 
@@ -60,21 +47,17 @@ function mostrarConfirmacion(mensaje, titulo = 'Confirmar acción') {
         const btnCancel = document.getElementById('modalBtnCancel');
         const btnAccept = document.getElementById('modalBtnAccept');
         
-        // Configurar icono de confirmación
         icon.className = 'modal-icon warning';
         icon.textContent = '?';
         
         titleElement.textContent = titulo;
         messageElement.textContent = mensaje;
         
-        // Mostrar ambos botones
         btnCancel.style.display = 'inline-block';
         btnAccept.textContent = 'Confirmar';
         
-        // Guardar callback
         modalCallback = resolve;
         
-        // Mostrar modal
         modal.classList.add('show');
     });
 }
@@ -83,14 +66,12 @@ function cerrarModalNotificacion(resultado = true) {
     const modal = document.getElementById('notificationModal');
     modal.classList.remove('show');
     
-    // Si hay un callback (confirmación), ejecutarlo
     if (modalCallback) {
         modalCallback(resultado);
         modalCallback = null;
     }
 }
 
-// Cerrar modal al hacer clic fuera de él (solo para notificaciones, no confirmaciones)
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('notificationModal');
     if (modal) {
@@ -102,11 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ==========================================
-// VALIDACIONES EN TIEMPO REAL
-// ==========================================
+
 function configurarValidacionesAlumno() {
-    // Validación de Cédula: solo números, exactamente 10
     const inputCedula = document.getElementById('cedula');
     if (inputCedula) {
         inputCedula.addEventListener('input', function(e) {
@@ -119,7 +97,6 @@ function configurarValidacionesAlumno() {
         });
     }
     
-    // Validación de Teléfono: solo números, exactamente 10
     const inputTelefono = document.getElementById('telefono');
     if (inputTelefono) {
         inputTelefono.addEventListener('input', function(e) {
@@ -132,11 +109,9 @@ function configurarValidacionesAlumno() {
         });
     }
     
-    // Validación de Nombre: solo letras y espacios, mínimo 3
     const inputNombre = document.getElementById('nombre');
     if (inputNombre) {
         inputNombre.addEventListener('input', function(e) {
-            // Permitir letras (incluye acentos), espacios y ñ
             e.target.value = e.target.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, '');
         });
         inputNombre.addEventListener('keypress', function(e) {
@@ -147,11 +122,9 @@ function configurarValidacionesAlumno() {
         });
     }
     
-    // Validación de Apellido: solo letras y espacios, mínimo 3
     const inputApellido = document.getElementById('apellido');
     if (inputApellido) {
         inputApellido.addEventListener('input', function(e) {
-            // Permitir letras (incluye acentos), espacios y ñ
             e.target.value = e.target.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ ]/g, '');
         });
         inputApellido.addEventListener('keypress', function(e) {
@@ -163,9 +136,7 @@ function configurarValidacionesAlumno() {
     }
 }
 
-// ==========================================
-// MODALES - ALUMNO
-// ==========================================
+
 function abrirModalAlumno(cedula = null) {
     document.getElementById('modalAlumno').style.display = 'block';
     document.getElementById('tituloModalAlumno').textContent = cedula ? 'Editar Alumno' : 'Nuevo Alumno';
@@ -182,7 +153,6 @@ function abrirModalAlumno(cedula = null) {
         document.getElementById('formAlumno').reset();
     }
     
-    // Configurar validaciones cada vez que se abre el modal
     configurarValidacionesAlumno();
 }
 
@@ -193,7 +163,6 @@ function cerrarModalAlumno() {
     cedulaEdicion = null;
 }
 
-// Cerrar modal al hacer clic fuera
 window.onclick = function(event) {
     const modalAlumno = document.getElementById('modalAlumno');
     const modalCurso = document.getElementById('modalCurso');
@@ -201,9 +170,7 @@ window.onclick = function(event) {
     if (modalCurso && event.target == modalCurso) cerrarModalCurso();
 }
 
-// ==========================================
-// LÓGICA DE ALUMNOS - COMÚN
-// ==========================================
+
 async function mostrarAlumnos() {
     try {
         const response = await fetch(API_ALUMNOS);
@@ -325,11 +292,7 @@ async function eliminarAlumno(cedula) {
     }
 }
 
-// ==========================================
-// FILTROS - COMUNES
-// ==========================================
 
-// Filtro 1: Buscar alumno por cédula
 async function buscarAlumnoPorCedula() {
     const cedula = document.getElementById("filtroCedula").value.trim();
     if (!cedula) {
@@ -351,7 +314,6 @@ async function buscarAlumnoPorCedula() {
     }
 }
 
-// Filtro 2: Ver curso de un alumno
 async function verCursoDeAlumno() {
     const cedula = document.getElementById("filtroCursoCedula").value.trim();
     
@@ -364,11 +326,9 @@ async function verCursoDeAlumno() {
         const response = await fetch(`${API_ALUMNOS}/${cedula}/curso`);
         if (response.ok) {
             const curso = await response.json();
-            // Filtrar la tabla para mostrar solo este curso
             renderizarTablaCursos([curso]);
         } else {
             mostrarNotificacion("No se encontró el curso del alumno con esa cédula.", "info");
-            // Mostrar tabla vacía
             document.getElementById("tblCursos").innerHTML = "";
         }
     } catch (error) {
@@ -377,7 +337,6 @@ async function verCursoDeAlumno() {
     }
 }
 
-// Filtro 3: Alumnos por curso
 async function listarAlumnosPorCurso() {
     const idCurso = document.getElementById("filtroCursoId").value;
     if (!idCurso) {
@@ -403,7 +362,6 @@ function limpiarFiltros() {
     document.getElementById("filtroCedula").value = "";
     document.getElementById("filtroCursoCedula").value = "";
     document.getElementById("filtroCursoId").value = "";
-    // Recargar todas las tablas
     mostrarAlumnos();
     if (typeof mostrarCursos === 'function') {
         mostrarCursos();

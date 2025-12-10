@@ -81,7 +81,7 @@ public class SecurityConfig {
                         .requestMatchers("/dashboard_admin.html").hasRole("ADMIN")
                         .requestMatchers("/dashboard_secretaria.html").hasRole("SECRETARIA")
 
-                        // aquí se definen los accesos por rola a las apis de los cursos 
+                        // aquí se definen los accesos por rol a las apis de los cursos 
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cursos/**").hasAnyRole("ADMIN", "SECRETARIA")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cursos/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/cursos/**").hasRole("ADMIN")

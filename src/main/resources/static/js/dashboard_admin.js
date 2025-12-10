@@ -1,8 +1,4 @@
-// ==========================================
-// DASHBOARD ADMIN - FUNCIONES ESPECÍFICAS
-// ==========================================
 
-// AL CARGAR LA PAGINA
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -12,21 +8,16 @@ async function init() {
     configurarValidacionParalelo();
 }
 
-// ==========================================
-// VALIDACIÓN DE PARALELO
-// ==========================================
+
 function configurarValidacionParalelo() {
     const inputParalelo = document.getElementById('paraleloCurso');
     
     inputParalelo.addEventListener('input', function(e) {
-        // Eliminar cualquier carácter que no sea una letra
         let valor = e.target.value.replace(/[^A-Za-z]/g, '');
-        // Tomar solo el primer carácter
         e.target.value = valor.substring(0, 1).toUpperCase();
     });
     
     inputParalelo.addEventListener('keypress', function(e) {
-        // Prevenir entrada de números y caracteres especiales
         const char = String.fromCharCode(e.which);
         if (!/[A-Za-z]/.test(char)) {
             e.preventDefault();
@@ -34,9 +25,7 @@ function configurarValidacionParalelo() {
     });
 }
 
-// ==========================================
-// MODALES - CURSO (Solo Admin)
-// ==========================================
+
 function abrirModalCurso(id = null, nombre = '', paralelo = '') {
     document.getElementById('modalCurso').style.display = 'block';
     document.getElementById('idCursoHidden').value = id || '';
@@ -50,9 +39,7 @@ function cerrarModalCurso() {
     document.getElementById('formCurso').reset();
 }
 
-// ==========================================
-// LÓGICA DE CURSOS
-// ==========================================
+
 function renderizarTablaCursos(listaCursos) {
     const tabla = document.getElementById("tblCursos");
     tabla.innerHTML = "";
@@ -101,6 +88,7 @@ async function guardarCurso() {
             cerrarModalCurso();
             await mostrarCursos();
             await cargarCursosEnSelects();
+            await  mostrarAlumnos();
             mostrarNotificacion(
                 id ? "El curso se actualizó correctamente." : "El curso se creó exitosamente.",
                 "success"
