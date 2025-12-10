@@ -14,13 +14,14 @@ async function cargarCursosEnSelect() {
         const select2 = document.getElementById("filtroCursoId");
         
         select1.innerHTML = '<option value="">-- Seleccione un Curso --</option>';
-     
+        select2.innerHTML = '<option value="">Seleccione un curso</option>';
 
         cursos.forEach(c => {
             select1.innerHTML += `<option value="${c.idCurso}">${c.nombreCurso} (${c.paralelo})</option>`;
-         
+            select2.innerHTML += `<option value="${c.idCurso}">${c.nombreCurso} (${c.paralelo})</option>`;
         });
     } catch (error) {
         console.error("Error al cargar cursos:", error);
+        mostrarNotificacion("No se pudieron cargar los cursos. Por favor, intente nuevamente.", "error");
     }
 }
