@@ -26,13 +26,11 @@ public class AlumnosController {
         return service.listar();
     }
 
-    // Busca al alumno por su cédula
     @GetMapping("/{cedula}")
     public Alumno buscar(@PathVariable String cedula) {
         return service.buscarPorCedula(cedula);
     }
 
-    // CORREGIDO: Se agregó "/curso" para evitar el error "Ambiguous mapping"
     @GetMapping("/{cedula}/curso")
     public Curso buscarCurso(@PathVariable String cedula){
         return service.obtenerCursoPorCedula(cedula);

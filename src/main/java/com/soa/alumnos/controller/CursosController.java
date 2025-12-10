@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/api/cursos")
 public class CursosController {
 
-    // Se recomienda hacerlo final para garantizar inmutabilidad
     private final CursosService service;
 
     public CursosController(CursosService service) {

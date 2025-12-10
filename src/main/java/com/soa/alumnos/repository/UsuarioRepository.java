@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByUsername(String username);
 
-    // Opcional: Para validar que no se repita el email al registrar
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
 }

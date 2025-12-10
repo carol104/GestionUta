@@ -132,7 +132,6 @@
 </div>
 
 <script>
-// Copiar el sistema de modales de dashboard-common.js
 let modalCallback = null;
 
 function mostrarNotificacion(mensaje, tipo = 'info', titulo = '') {
@@ -199,7 +198,6 @@ function cerrarModalNotificacion(resultado = true) {
     }
 }
 
-// Cerrar modal al hacer clic fuera
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('notificationModal');
     if (modal) {
@@ -236,7 +234,7 @@ async function testConfirm() {
     
     const resultDiv = document.getElementById('confirmResult');
     resultDiv.style.display = 'block';
-    resultDiv.textContent = confirmar ? '✅ Usuario confirmó la eliminación' : '❌ Usuario canceló la operación';
+    resultDiv.textContent = confirmar ? 'Usuario confirmó la eliminación' : ' Usuario canceló la operación';
     
     if (confirmar) {
         setTimeout(() => {
@@ -253,7 +251,7 @@ async function testConfirmCurso() {
     
     const resultDiv = document.getElementById('confirmResult');
     resultDiv.style.display = 'block';
-    resultDiv.textContent = confirmar ? '✅ Curso eliminado' : '❌ Operación cancelada';
+    resultDiv.textContent = confirmar ? 'Curso eliminado' : 'Operación cancelada';
     
     if (confirmar) {
         setTimeout(() => {

@@ -151,12 +151,15 @@
     <form id="registerForm">
         <div class="form-group">
             <label for="username">Usuario <span class="required">*</span></label>
-            <input type="text" id="username" name="username" placeholder="Ingrese nombre de usuario" required>
+            <input type="text" id="username" name="username" placeholder="Ej: juan123 (letras + opcional números)" 
+                   pattern="^[a-zA-Z][a-zA-Z0-9]*$" minlength="3" maxlength="50" required
+                   title="Debe comenzar con una letra, contener solo letras y números, mínimo 3 caracteres">
         </div>
 
         <div class="form-group">
             <label for="email">Correo Electrónico <span class="required">*</span></label>
-            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required
+                   title="Ingrese un correo electrónico válido (ej: usuario@dominio.com)">
         </div>
 
         <div class="form-group">
@@ -195,6 +198,27 @@
     const form = document.getElementById('registerForm');
     const errorAlert = document.getElementById('error-alert');
     const successAlert = document.getElementById('success-alert');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+
+    // Validación en tiempo real para el usuario
+    usernameInput.addEventListener('input', function(e) {
+        // Solo permite letras y números
+        e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+        
+        // Si empieza con número, lo elimina
+        if (e.target.value && /^[0-9]/.test(e.target.value)) {
+            e.target.value = e.target.value.replace(/^[0-9]+/, '');
+        }
+    });
+
+    // Validación de email
+    emailInput.addEventListener('blur', function(e) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (e.target.value && !emailRegex.test(e.target.value)) {
+            showError('El email no es válido. Ej: usuario@dominio.com');
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -214,6 +238,24 @@
         // Validaciones
         if (!username || !email || !nombre || !password || !rol) {
             showError('Todos los campos son obligatorios');
+            return;
+        }
+
+        // Validar username (comienza con letra, contiene solo letras y números, mínimo 3)
+        if (!/^[a-zA-Z][a-zA-Z0-9]*$/.test(username)) {
+            showError('El usuario debe comenzar con una letra y contener solo letras y números');
+            return;
+        }
+
+        if (username.length < 3) {
+            showError('El usuario debe tener al menos 3 caracteres');
+            return;
+        }
+
+        // Validar email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showError('El email debe ser válido (ej: usuario@dominio.com)');
             return;
         }
 

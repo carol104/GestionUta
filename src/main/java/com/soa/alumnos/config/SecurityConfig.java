@@ -37,7 +37,7 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    // --- AQUÍ ESTÁ LA LÓGICA DE REDIRECCIÓN ---
+    // lógica para redirigir según el rol
     @Bean
     public AuthenticationSuccessHandler mySuccessHandler() {
         return new AuthenticationSuccessHandler() {
@@ -60,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permite tanto HTTP (desarrollo) como HTTPS (producción)
+        // aqui ya permite el http y https 
         configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:*", "https://*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
@@ -78,18 +78,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/login.html", "/register", "/register.html", "/registro", "/css/**", "/js/**", "/static/**", "/api/auth/**").permitAll()
-
-                        // Vistas de dashboards
                         .requestMatchers("/dashboard_admin.html").hasRole("ADMIN")
                         .requestMatchers("/dashboard_secretaria.html").hasRole("SECRETARIA")
 
-                        // API de Cursos: ADMIN tiene acceso total, SECRETARIA solo lectura (GET)
+                        // aquí se definen los accesos por rola a las apis de los cursos 
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cursos/**").hasAnyRole("ADMIN", "SECRETARIA")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/cursos/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/cursos/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/cursos/**").hasRole("ADMIN")
 
-                        // API de Alumnos: Ambos roles tienen acceso total
                         .requestMatchers("/api/alumnos/**").hasAnyRole("ADMIN", "SECRETARIA")
 
                         .requestMatchers("/api/**").authenticated()

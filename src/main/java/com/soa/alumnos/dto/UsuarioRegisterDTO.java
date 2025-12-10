@@ -2,15 +2,17 @@ package com.soa.alumnos.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record UsuarioRegisterDTO(
         @NotBlank(message = "El nombre de usuario es obligatorio")
         @Size(min = 3, max = 50, message = "El usuario debe tener entre 3 y 50 caracteres")
+        @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]*$", message = "El usuario debe comenzar con una letra y contener solo letras y números")
         String username,
 
         @NotBlank(message = "El email es obligatorio")
-        @Email(message = "Email inválido")
+        @Email(message = "El email debe ser válido Ejemplo: usuario@dominio.com")
         String email,
 
         @NotBlank(message = "El nombre es obligatorio")
